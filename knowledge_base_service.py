@@ -35,8 +35,8 @@ class KnowledgeBaseService:
          persist_directory="data/chroma"
        )
        self.spliter = RecursiveCharacterTextSplitter(#text分割器
-         chunk_size=30,
-         chunk_overlap=10,
+         chunk_size=500,
+         chunk_overlap=50,
          separators=["\n\n", "\n", " ", "."],
          length_function=len
        )
