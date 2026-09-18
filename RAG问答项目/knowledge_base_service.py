@@ -51,7 +51,7 @@ class KnowledgeBaseService:
            metadata = {
                "filename": filename,
                "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-               "operator":"赵卿祥"
+               "operator":"admin"
            }
            self.chroma.add_texts(#因为chroma里存的是先document再转为向量,所以这里text相当于.page_content,还要加上metadata
                texts=data_spliter,
