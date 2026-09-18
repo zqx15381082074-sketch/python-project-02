@@ -1,38 +1,38 @@
 # LangChain 学习项目：RAG 问答应用与医学健康 Agent 智能客服
 
-基于 LangChain + 通义千问（Qwen）构建的两个智能问答应用，以及一套 LangChain 基础学习笔记。
+基于 LangChain + 通义千问（Qwen）构建的两个智能问答应用。
 
-- 应用一：简易 RAG 问答机器人（根目录）—— LCEL 链式组装的检索增强问答
+- 应用一：简易 RAG 问答机器人（`RAG问答项目/`）—— LCEL 链式组装的检索增强问答
 - 应用二：智康助手 · 医学健康 Agent 智能客服（`agent项目/`）—— 基于新版 `create_agent` 的自主 Agent，带工具调用与动态提示词切换
-- 学习笔记（`langchainRAG基础知识/`）—— 21 个编号练习，覆盖模型调用 → 记忆 → 向量库 → 工具调用全流程
 
 ## 项目结构
 
 ```
 02/
-├── app_qa.py                  # 应用一：RAG 问答对话界面（Streamlit）
-├── file_uploader.py           # 应用一：知识库文件上传界面
-├── rag_service.py             # 应用一：RAG 核心链（LCEL）
-├── knowledge_base_service.py  # 应用一：知识入库（MD5 去重 + 切片）
-├── vector_store_service.py    # 应用一：Chroma 向量库访问层
-├── history_store.py           # 应用一：文件版会话记忆
-├── config_data.py             # 应用一：配置
+├── RAG问答项目/                # 应用一：简易 RAG 问答机器人
+│   ├── app_qa.py               # 对话界面（Streamlit）
+│   ├── file_uploader.py        # 知识库文件上传界面
+│   ├── rag_service.py          # RAG 核心链（LCEL）
+│   ├── knowledge_base_service.py  # 知识入库（MD5 去重 + 切片）
+│   ├── vector_store_service.py # Chroma 向量库访问层
+│   ├── history_store.py        # 文件版会话记忆
+│   └── config_data.py          # 配置
 │
 ├── agent项目/                  # 应用二：医学健康 Agent 智能客服
-│   ├── app.py                 # 对话界面（Streamlit）
+│   ├── app.py                  # 对话界面（Streamlit）
 │   ├── agent/
-│   │   ├── react_agent.py     # Agent 本体（create_agent + ReAct）
+│   │   ├── react_agent.py      # Agent 本体（create_agent + ReAct）
 │   │   └── tools/
-│   │       ├── agent_tools.py # 7 个工具（RAG 检索 / 天气 / 健康记录等）
-│   │       └── middleware.py  # 中间件：日志监控 + 动态提示词切换
-│   ├── model/factory.py       # 模型工厂（ChatTongyi + DashScopeEmbeddings）
-│   ├── rag/                   # 检索服务（工程化 RAG，直接运行 vector_store.py 建库）
-│   ├── prompts/               # 提示词文件（主客服 / RAG 总结 / 报告生成）
-│   ├── config/                # yml 配置（模型、切片、路径、向量库）
-│   ├── data/                  # 医学知识库文档 + 外部健康监测数据
-│   └── utils/                 # 路径 / 配置 / 文件 / 提示词 / 日志工具
+│   │       ├── agent_tools.py  # 7 个工具（RAG 检索 / 天气 / 健康记录等）
+│   │       └── middleware.py   # 中间件：日志监控 + 动态提示词切换
+│   ├── model/factory.py        # 模型工厂（ChatTongyi + DashScopeEmbeddings）
+│   ├── rag/                    # 检索服务（工程化 RAG，直接运行 vector_store.py 建库）
+│   ├── prompts/                # 提示词文件（主客服 / RAG 总结 / 报告生成）
+│   ├── config/                 # yml 配置（模型、切片、路径、向量库）
+│   ├── data/                   # 医学知识库文档 + 外部健康监测数据
+│   └── utils/                  # 路径 / 配置 / 文件 / 提示词 / 日志工具
 │
-└── langchainRAG基础知识/       # LangChain 基础学习脚本（21 个）
+└── requirements.txt
 ```
 
 ## 功能特性
@@ -85,8 +85,10 @@ export DASHSCOPE_API_KEY=sk-xxxx
 **应用一（简易 RAG 问答）：**
 
 ```bash
-streamlit run app_qa.py        # 对话界面
+cd RAG问答项目
+
 streamlit run file_uploader.py # 上传 txt 构建知识库
+streamlit run app_qa.py        # 对话界面
 ```
 
 **应用二（医学健康 Agent）：**
@@ -114,7 +116,7 @@ streamlit run app.py
 
 ## 两版架构对比
 
-| 维度 | 应用一（根目录） | 应用二（agent项目） |
+| 维度 | 应用一（RAG问答项目） | 应用二（agent项目） |
 |---|---|---|
 | 架构 | 固定执行链（LCEL 拼装） | 自主 Agent（模型决定工具调用） |
 | 提示词 | 写死在代码里 | txt 文件配置化 + 运行时动态切换 |
@@ -125,3 +127,7 @@ streamlit run app.py
 ## 免责声明
 
 应用二的回答由 AI 生成，仅供健康科普参考，不能替代专业医疗建议。如有身体不适，请及时就医。
+
+## 许可证
+
+[MIT](./LICENSE)

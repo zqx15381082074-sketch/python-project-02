@@ -9,13 +9,17 @@ venv/
 
 # 运行时生成的数据（可由脚本重建）
 chroma_db/
-data/chroma/
+RAG问答项目/data/chroma/
+RAG问答项目/data/md5.txt
+RAG问答项目/chat_history/
 agent项目/chroma_db/
-data/md5.txt
 agent项目/md5.text
-chat_history/
 agent项目/logs/
 logs/
+
+# 本地学习笔记（不入库）
+langchainRAG基础知识/
+/data/
 
 # 系统文件
 .DS_Store
