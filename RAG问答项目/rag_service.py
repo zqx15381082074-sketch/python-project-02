@@ -8,12 +8,15 @@ from langchain_core.runnables import RunnablePassthrough, RunnableLambda, Runnab
 
 from history_store import get_history
 from vector_store_service import VectorStoreService
+from hybrid_retrieval import HybridRetriever
 
 
 class RagService:
     def __init__(self):
         self.vector_store = VectorStoreService(embedding=DashScopeEmbeddings())
-        self.retriever = self.vector_store.get_retriever()
+        # 原来是单路向量检索: self.retriever = self.vector_store.get_retriever()
+        # 现在升级为混合检索: BM25关键词 + 向量语义 双路召回 -> RRF融合 -> 重排
+        self.retriever = HybridRetriever(self.vector_store.vector_store)
         self.model = ChatTongyi(model="qwen3-max",streaming=True)
         self.prompt = ChatPromptTemplate.from_messages([
             ("system","你是一个智能对话机器人,要求根据以下资料回答问题,资料是:{context}"),
@@ -39,7 +42,7 @@ class RagService:
             new_value["context"] = value["context"]
             new_value["history"] = value["input"]["history"]
             return new_value
-        chain = {"input":RunnablePassthrough(),"context":RunnableLambda(my_func2)|self.retriever| RunnableLambda(my_func1)} | RunnableLambda(mu_func3)| self.prompt | self.model | StrOutputParser ()
+        chain = {"input":RunnablePassthrough(),"context":RunnableLambda(my_func2)| RunnableLambda(lambda q: self.retriever.retrieve(q)) | RunnableLambda(my_func1)} | RunnableLambda(mu_func3)| self.prompt | self.model | StrOutputParser ()
 
         conversation_chain = RunnableWithMessageHistory(
             chain,

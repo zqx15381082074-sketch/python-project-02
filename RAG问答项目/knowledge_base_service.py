@@ -58,4 +58,13 @@ class KnowledgeBaseService:
                metadatas=[metadata for _ in data_spliter]#要给每一个document添加一个metadata,所以这里要循环
            )
            save_md5(md5_hex)
+           self._refresh_hybrid_index()  # 新文档入库后重建BM25索引, 保证混合检索能搜到新内容
            return ["上传成功"]
+
+    def _refresh_hybrid_index(self):
+        # 懒加载导入, 避免循环依赖; 刷新失败不影响上传主流程
+        try:
+            from hybrid_retrieval import get_hybrid_retriever
+            get_hybrid_retriever().refresh()
+        except Exception as e:
+            print(f"刷新BM25索引失败(不影响上传): {e}")
